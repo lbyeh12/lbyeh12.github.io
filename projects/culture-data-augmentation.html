@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>문화예술 인재 매칭을 위한 데이터 증강 파이프라인 - 이병호</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  :root {
+    --color-bg: #f3f2f2; --color-text: #201f1d; --color-accent: #b68235; --color-accent-700: #7d5411;
+    --color-neutral-700: #605d5d; --color-divider: rgba(32,31,29,0.16);
+    --font-heading: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-body: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 15px; line-height: 1.75; letter-spacing: -0.01em; display: flex; justify-content: center; padding: 40px 16px; }
+  .page { width: 100%; max-width: 780px; }
+  a.back { font-size: 13px; color: var(--color-accent-700); text-decoration: none; }
+  a.back:hover { text-decoration: underline; }
+  h1 { font-family: var(--font-heading); font-weight: 700; font-size: 30px; margin: 16px 0 4px; letter-spacing: -0.02em; }
+  .meta { font-size: 13px; color: var(--color-neutral-700); margin-bottom: 8px; }
+  .lede { font-size: 15.5px; margin: 20px 0 0; text-align: justify; color: #3a3836; }
+  h2 { font-family: var(--font-heading); font-weight: 700; font-size: 20px; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--color-divider); letter-spacing: -0.01em; }
+  h3 { font-family: var(--font-heading); font-weight: 600; font-size: 15.5px; margin: 20px 0 8px; color: #3a3836; }
+  p { text-align: justify; margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 20px; }
+  li { margin-bottom: 7px; text-align: justify; }
+  .tag { display: inline-block; font-size: 11px; padding: 3px 10px; border: 1px solid var(--color-accent); color: var(--color-accent); border-radius: 3px; margin: 0 4px 4px 0; }
+  hr { border: none; border-top: 1px solid var(--color-divider); margin: 32px 0 20px; }
+  pre { background: #eae8e7; border: 1px solid var(--color-divider); border-radius: 6px; padding: 14px 16px; font-size: 12.5px; line-height: 1.6; overflow-x: auto; font-family: ui-monospace, "SF Mono", Menlo, monospace; white-space: pre; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0 18px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--color-divider); }
+  th { color: var(--color-neutral-700); font-weight: 600; font-size: 12px; letter-spacing: 0.02em; }
+  .card { background: #ece9e8; border: 1px solid var(--color-divider); border-radius: 8px; padding: 16px 18px; margin-bottom: 14px; }
+  .card-label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent-700); margin-bottom: 6px; }
+  .num { font-variant-numeric: tabular-nums; }
+  .qa dt { font-weight: 600; margin-top: 16px; color: var(--color-accent-700); font-size: 14.5px; }
+  .qa dd { margin: 6px 0 0; text-align: justify; }
+  .source-note { font-size: 12px; color: var(--color-neutral-700); margin-top: 4px; }
+  figure.arch-media { margin: 8px 0 18px; }
+  figure.arch-media img { width: 100%; border-radius: 8px; border: 1px solid var(--color-divider); display: block; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">&larr; 이력서로 돌아가기</a>
+  <h1>문화예술 인재 매칭을 위한 데이터 증강 파이프라인</h1>
+  <div class="meta">연구 프로젝트 (공동 제1저자) · 국립한밭대학교 · 데뷔조인 · 중소벤처기업부 창업성장기술개발지원사업 (과제번호 202403780002)</div>
+
+  <p class="lede">연예기획사·연습생 매칭 스타트업과 함께, 75명뿐인 희소한 문화예술 연습생 데이터를 LLM 기반 3-Step 파이프라인으로 증강하고, DPR 기반 단일 벡터 검색 모델로 연습생-기획사 매칭이 가능함을 실험으로 검증한 연구 프로젝트입니다. 이 논문에 포함된 데이터 생성 파이프라인·검색 모델 적용·실험 전체를 공동 제1저자로 담당했습니다.</p>
+  <p class="lede">데뷔조인으로부터 수집한 실제 연습생 프로필은 75명뿐이라, 학습·평가에 쓰기엔 데이터가 지나치게 희소했습니다. 연습생 정보는 예술적 역량·재능·창의성 같은 정성적 메타 정보와 트레이너의 주관적 피드백으로 구성되는데, 규칙 기반 매칭으로는 이런 정성적 의미를 반영하기 어렵고, 검색 모델을 쓰면 의미 관계를 반영할 수 있지만 정작 학습·검증에 쓸 데이터 자체가 부족한 새로운 도메인이라는 게 핵심 문제였습니다. 매칭 서비스 특성상 정확도뿐 아니라 실시간 응답에 필요한 연산 속도도 함께 만족해야 했습니다.</p>
+
+  <h2>아키텍처</h2>
+  <figure class="arch-media">
+    <img src="culture-arts-pipeline.png" alt="3-Step 데이터 생성 파이프라인 다이어그램">
+  </figure>
+  <h3>3-Step 데이터 생성 파이프라인 (GPT-4o 계열 모델 기반)</h3>
+  <pre>[Step 1] 연습생 프로필 생성
+  특징 속성(나이·성별·선호 스타일) + 연습 기준(보컬·댄스)
+       ─▶ 트레이너 페르소나(냉정함/느슨함/분석적) × gpt-4o-mini
+       ─▶ 연습생 메타 정보 + 트레이너 피드백
+
+[Step 2] 연습생-기획사 매칭 정보 생성
+  연습생 프로필 + 기획사 선호 정보
+       ─▶ LLM-as-a-judge(o1)가 1-5점 유사도 평가
+       ─▶ threshold 이상이면 매칭 관계로 정의
+       ─▶ one-hot 속성 벡터 K-Means 클러스터링 (매칭 다양성 확보)
+
+[Step 3] 질의 생성
+  클러스터별 5-10명 임의 샘플링 → 후보군 구성
+       ─▶ 프롬프팅으로 같은 후보군 공유하는 질문 5개씩 생성
+
+[검색 모델 실험]
+증강된 프로필 Collection ─┬─▶ BM25 (키워드 매칭 베이스라인)
+                          ├─▶ DPR (Dense, 단일 벡터 검색) ──▶ 최종 채택
+                          └─▶ Cross-Encoder (질의·문서 결합 인코딩)</pre>
+
+  <h3>왜 이 구조/기술인가 — 대안 비교</h3>
+  <table>
+    <tr><th>항목</th><th>검토한 후보</th><th>최종 선택</th><th>선택 이유</th></tr>
+    <tr><td>검색 모델</td><td>BM25(키워드 매칭) / DPR(단일 벡터, Dense) / Cross-Encoder(질의-문서 결합 인코딩)</td><td>DPR</td><td>Cross-Encoder가 HIT@20 94.7%로 정확도는 가장 높았지만 검색 시간이 653.2~1924.0ms로 후보 수에 비례해 계속 느려져 실시간 매칭에 부적합했습니다. BM25는 키워드가 그대로 일치할 때만 강해 상위 랭킹 정밀도(HIT@1 5.3%)가 낮았습니다. DPR은 정확도는 Cross-Encoder보다 낮지만 속도가 10배 가까이 빨라, 실시간 매칭 서비스라는 목적에 가장 적합했습니다.</td></tr>
+    <tr><td>데이터 증강 방식</td><td>규칙 기반 증강(속성 랜덤 조합) / LLM 3-Step 생성 파이프라인</td><td>LLM 3-Step 파이프라인</td><td>규칙 기반 조합은 트레이너 피드백처럼 정성적인 텍스트를 만들 수 없고, 매칭 정보·질의까지 일관되게 생성하기 어렵습니다. LLM 기반 단계적 생성(프로필→매칭→질의)은 도메인 지식(트레이너 페르소나, 평가 기준)을 반영하면서도 규모를 자유롭게 확장할 수 있었습니다.</td></tr>
+    <tr><td>매칭 다양성 확보</td><td>LLM-as-a-judge 점수만으로 매칭 / one-hot 속성 K-Means 클러스터링 추가</td><td>클러스터링 추가</td><td>점수 기반 매칭만 쓰면 특정 패턴에 쏠린 매칭 쌍이 반복 생성될 위험이 있어, 속성을 one-hot 벡터화해 K-Means로 클러스터링하고 이를 기준으로 샘플링해 매칭 쌍의 다양성을 강제로 확보했습니다.</td></tr>
+  </table>
+
+  <h2>핵심 이슈 & 트러블슈팅</h2>
+  <h3>① 합성 데이터가 실제 데이터에도 일반화되는가?</h3>
+  <p>LLM으로 만든 silver-standard 데이터만으로 성능을 측정하면 착시가 생길 수 있어, 원본 실데이터 38개 테스트셋을 고정해두고 모든 실험에서 "증강 데이터 기준 성능"과 "원본 테스트셋 기준 성능"(표에서 괄호 안 수치)을 항상 같이 측정했습니다. 두 수치가 크게 벌어지지 않는다는 걸 확인해서, 생성된 데이터가 실제 도메인에도 일반적으로 쓰일 수 있음을 검증했습니다.</p>
+  <h3>② 정확도와 속도의 트레이드오프</h3>
+  <p>원본 데이터만으로 실험했을 때 Cross-Encoder가 HIT@20 94.7%로 가장 정확했지만, 검색 시간이 653.2ms로 가장 느렸고, 이 연산 시간은 증강되는 프로필 양에 비례해 계속 늘어났습니다(1:2 비율에서는 1924.0ms까지 증가). 실시간 매칭이 중요한 서비스 특성상 이 정도 지연은 실용적이지 않다고 판단해, 정확도는 Cross-Encoder보다 낮지만 속도가 10배 가까이 빠른 DPR을 실서비스에 더 적합한 방식으로 결론지었습니다.</p>
+  <h3>③ 매칭 편향 문제</h3>
+  <p>LLM-as-a-judge 점수만으로 연습생-기획사를 매칭하면 특정 패턴에 쏠린 매칭 쌍만 반복 생성될 위험이 있어, one-hot 속성 벡터 기반 K-Means 클러스터링을 추가해 매칭 쌍의 다양성을 강제로 확보했습니다.</p>
+
+  <h2>개선 결과</h2>
+  <ul>
+    <li>원본 데이터(75명, 증강 없음) 기준: Cross-Encoder HIT@20 94.7%(653.2ms) &gt; BM25 84.2%(0.6ms) &gt; DPR 71.1%(117.3ms). 다만 BM25는 HIT@1이 5.3%에 그쳐, 상위 랭킹 정밀도는 검색 모델(DPR·Cross-Encoder)이 키워드 매칭보다 뚜렷하게 우수했습니다.</li>
+    <li>데이터 증강(1:2 비율) 이후 DPR은 HIT@20 78.1%(원본 테스트셋 기준 71.1%)까지 개선되었고, Cross-Encoder(1924.0ms) 대비 약 10배 빠른 속도(122.7ms)로 정확도-속도 균형점을 확인했습니다.</li>
+    <li>질의 증강 ablation(Exp2)에서는 질의 수를 1개 → 3개 → 5개로 늘릴수록 DPR 성능이 HIT@20 71.9% → 78.1%로 꾸준히 향상되어, 생성된 질의 자체가 유의미하다는 것을 확인했습니다.</li>
+    <li>결론적으로 3-Step 데이터 생성 파이프라인이 BM25·DPR·Cross-Encoder 세 접근 방식 모두에서 유효했고, 검색 모델 기반 접근이 키워드 매칭보다 성능·시간 양쪽에서 우위에 있음을 검증했습니다.</li>
+  </ul>
+
+  <h2>운영 관점</h2>
+  <p>데이터 생성 파이프라인 전체가 gpt-4o-mini(피드백 생성)와 o1(매칭 스코어링)을 이용한 완전 자동화 프로세스라, 75 → 150 → 225 → 300명 규모로 배수 증강이 재현 가능함을 실험으로 직접 증명했습니다. 실 서비스 적용을 고려해 정확도 1위 모델을 그대로 채택하지 않고, 정확도·속도·연산 비용을 함께 저울질해 실시간 응답이 가능한 모델(DPR)을 최종 후보로 선정한 것도 이 부분과 연결됩니다. 다만 이 논문 자체는 오프라인 실험/평가 단계까지이며, 실서비스 배포·모니터링 체계는 범위에 포함되지 않았습니다.</p>
+
+  <h2>참고 링크</h2>
+  <ul>
+    <li>논문: 단일 벡터 검색 모델을 이용한 문화예술 연습생 추천 (이병호·고동혁·박수진·박천음, 국립한밭대·데뷔조인)</li>
+    <li>지원 과제: 중소벤처기업부 창업성장기술개발지원사업, 과제번호 202403780002</li>
+  </ul>
+
+  <hr>
+  <a class="back" href="../index.html">&larr; 이력서로 돌아가기</a>
+</div>
+</body>
+</html>

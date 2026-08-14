@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>로컬 LLM 기반 보안 문서 검색 시스템 - 이병호</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  :root {
+    --color-bg: #f3f2f2; --color-text: #201f1d; --color-accent: #b68235; --color-accent-700: #7d5411;
+    --color-neutral-700: #605d5d; --color-divider: rgba(32,31,29,0.16);
+    --font-heading: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-body: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 15px; line-height: 1.75; letter-spacing: -0.01em; display: flex; justify-content: center; padding: 40px 16px; }
+  .page { width: 100%; max-width: 780px; }
+  a.back { font-size: 13px; color: var(--color-accent-700); text-decoration: none; }
+  a.back:hover { text-decoration: underline; }
+  h1 { font-family: var(--font-heading); font-weight: 700; font-size: 30px; margin: 16px 0 4px; letter-spacing: -0.02em; }
+  .meta { font-size: 13px; color: var(--color-neutral-700); margin-bottom: 8px; }
+  .team { font-size: 13px; color: var(--color-neutral-700); margin-bottom: 8px; }
+  .lede { font-size: 15.5px; margin: 20px 0 0; text-align: justify; color: #3a3836; }
+  h2 { font-family: var(--font-heading); font-weight: 700; font-size: 20px; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--color-divider); letter-spacing: -0.01em; }
+  h3 { font-family: var(--font-heading); font-weight: 600; font-size: 15.5px; margin: 20px 0 8px; color: #3a3836; }
+  p { text-align: justify; margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 20px; }
+  li { margin-bottom: 7px; text-align: justify; }
+  .tag { display: inline-block; font-size: 11px; padding: 3px 10px; border: 1px solid var(--color-accent); color: var(--color-accent); border-radius: 3px; margin: 0 4px 4px 0; }
+  hr { border: none; border-top: 1px solid var(--color-divider); margin: 32px 0 20px; }
+  pre { background: #eae8e7; border: 1px solid var(--color-divider); border-radius: 6px; padding: 14px 16px; font-size: 12.5px; line-height: 1.6; overflow-x: auto; font-family: ui-monospace, "SF Mono", Menlo, monospace; white-space: pre; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0 18px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--color-divider); }
+  th { color: var(--color-neutral-700); font-weight: 600; font-size: 12px; letter-spacing: 0.02em; }
+  .card { background: #ece9e8; border: 1px solid var(--color-divider); border-radius: 8px; padding: 16px 18px; margin-bottom: 14px; }
+  .card-label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent-700); margin-bottom: 6px; }
+  .num { font-variant-numeric: tabular-nums; }
+  .qa dt { font-weight: 600; margin-top: 16px; color: var(--color-accent-700); font-size: 14.5px; }
+  .qa dd { margin: 6px 0 0; text-align: justify; }
+  .source-note { font-size: 12px; color: var(--color-neutral-700); margin-top: 4px; }
+  figure.arch-media { margin: 8px 0 18px; }
+  figure.arch-media img { width: 100%; border-radius: 8px; border: 1px solid var(--color-divider); display: block; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">&larr; 이력서로 돌아가기</a>
+  <h1>로컬 LLM 기반 보안 문서 검색 시스템</h1>
+  <div class="meta">3인 팀 프로젝트 · 한밭대학교 컴퓨터공학과 캡스톤디자인 (LLG팀) · <a href="https://github.com/25capstoneRAG/rag_pipeline.git" class="back" style="font-size:13px;">github.com/25capstoneRAG/rag_pipeline</a></div>
+
+  <p class="lede">PDF 문서를 파싱해 BM25+DPR 하이브리드 검색으로 근거 문서를 찾고, 그 문서를 프롬프트에 넣어 온프레미스 sLM이 답하게 하는 RAG 챗봇을 3인 팀(LLG)으로 개발한 캡스톤 프로젝트입니다. 그중 <b>RAG 개발 및 문서 임베딩</b>, 문서 업로드용 데스크톱 앱 <b>CRAGD(Electron)</b> 빌드를 맡았습니다.</p>
+  <p class="lede">서비스되는 LLM은 정보를 학습하기 때문에 기업에서 외부에 공개되어서는 안 되는 문서 검색에 사용할 수 없습니다. 오픈소스로 공개된 LM·LLM 또한 문서 정보를 학습해야만 정확한 답변을 할 수 있어 방대한 학습 비용이 발생합니다. 이를 해결하기 위해 정확한 문서 내용을 검색해 근거로 함께 제공하면 답변 정확도를 개선할 수 있고, 특정 도메인에 묶이지 않는 시스템이 필요하다고 판단해 이 프로젝트를 시작했습니다. 보안 문서를 다루는 특성상 문서 내용이 외부로 전송되지 않아야 한다는 제약도 있었습니다.</p>
+
+  <h2>아키텍처</h2>
+  <figure class="arch-media">
+    <img src="rag_pipeline.gif" alt="RAG 파이프라인 아키텍처 애니메이션">
+  </figure>
+  <h3>데이터 흐름</h3>
+  <pre>[오프라인 · 인덱싱]  (CRAGD, 자체 Electron 앱 안에서 수행)
+PDF 업로드 ─▶ 청킹(Chunking) ─▶ PostgreSQL(Text 테이블)
+                                      │
+                     ┌────────────────┼────────────────┐
+                     ▼                                  ▼
+              DPR Context Encoder                  Pyserini(BM25 인덱스)
+                     │
+                     ▼
+               ChromaDB (벡터·텍스트·메타데이터 함께 저장)
+
+[온라인 · 질의응답]
+사용자 질의 ─┬─▶ DPR Question Encoder ─▶ ChromaDB(dense 검색, top-30)
+            └─▶ Pyserini(BM25 sparse 검색, top-30)
+                          │
+                 RRF(Reciprocal Rank Fusion)로 결합 → top-10
+                          │
+                 Cross-Encoder Reranking → top-5
+                          │
+        (검색된 문서 + 사용자 원본 질의) ─▶ 온프레미스 sLM(Qwen2.5-7B, 4bit)
+                          │
+                      최종 답변 + 이미지
+
+[Semantic Cache]
+질의 임베딩과 distance &lt; 0.05인 과거 질의가 있으면 캐시된 답변을 즉시 반환</pre>
+
+  <h3>왜 이 구조/기술인가 — 대안 비교</h3>
+  <table>
+    <tr><th>항목</th><th>검토한 후보</th><th>최종 선택</th><th>선택 이유</th></tr>
+    <tr><td>검색 방식</td><td>Dense-only(DPR 단독) / Sparse-only(BM25 단독) / Hybrid(DPR+BM25)</td><td>Hybrid</td><td>Dense는 의미 기반 검색이라 표현이 다른 질의에도 강하지만 정확한 키워드·고유명사 매칭에 약하고, Sparse(BM25)는 그 반대입니다. 문서 검색 특성상 사용자 질의에 특정 용어·수치가 자주 섞여 있어 둘을 RRF로 결합해 recall을 넓히고, reranker로 precision을 다시 좁히는 2단계 구조가 단일 방식보다 안정적이라고 판단했습니다.</td></tr>
+    <tr><td>벡터 스토어</td><td>FAISS / Milvus·Pinecone 같은 외부 매니지드 벡터DB / ChromaDB</td><td>ChromaDB</td><td>FAISS는 벡터 인덱스만 제공해 문서 텍스트·메타데이터를 별도 DB에서 관리하고 FastAPI에 직접 래핑해야 하는 부담이 있었습니다. Milvus·Pinecone 등은 별도 클러스터 운영/외부 SaaS 의존이 필요해 학내망·온프레미스로 운영하는 캡스톤 환경과 맞지 않았습니다. ChromaDB는 벡터·텍스트·메타데이터를 한 번에 저장하고 Docker/Kubernetes에 컨테이너 하나로 바로 배포할 수 있어 운영 부담이 가장 적었습니다.</td></tr>
+    <tr><td>BM25 엔진</td><td>rank_bm25(순수 Python) / Pyserini(Lucene 기반)</td><td>Pyserini</td><td>초기 실험(<code>doc_retrieval/utils/bm25.py</code>)은 rank_bm25로 빠르게 프로토타이핑했지만, 문서 수가 늘어나면 Python 구현은 인덱싱·검색 속도가 느려집니다. 실제 서비스(<code>rag_server</code>)에는 Java Lucene 기반이라 대규모 인덱스에서도 빠르고, 한국어 CJK 분석기를 기본 지원하는 Pyserini로 옮겼습니다.</td></tr>
+    <tr><td>Reranker</td><td>Cross-encoder(ms-marco-MiniLM) / ColBERT류 late-interaction / reranker 미사용</td><td>Cross-encoder</td><td>ColBERT류는 정확도는 높지만 문서마다 토큰 단위 임베딩을 저장해야 해서 저장 비용·구현 복잡도가 컸습니다. Reranker 없이 하이브리드 top-k만 바로 쓰는 방식은 구현이 가장 간단하지만 정밀도가 부족했습니다. Cross-encoder는 query-document 쌍을 직접 비교해 정확도가 높으면서도, top-10 정도의 적은 후보에만 적용하면 추론 비용이 감당할 만한 수준이라 채택했습니다.</td></tr>
+    <tr><td>응답 생성 LLM</td><td>클라우드 API(OpenAI) / 온프레미스 sLM(Qwen2.5-7B-Instruct)</td><td>온프레미스 sLM</td><td>보안 문서를 다루는 시스템 특성상 문서 내용이 외부 API로 전송되지 않아야 한다는 요구가 있었고, 반복 호출 시 API 비용도 누적됩니다. 4bit 양자화한 Qwen2.5-7B-Instruct를 로컬 GPU에 올려 서비스망 밖으로 데이터가 나가지 않도록 했습니다. 초기 개발·성능 비교 단계에서는 구현이 간단한 OpenAI API로 먼저 파이프라인을 검증했고, 이후 실제 배포에서 sLM으로 전환했습니다.</td></tr>
+  </table>
+
+  <h2>핵심 이슈 & 트러블슈팅</h2>
+  <h3>① 검색 정밀도 문제 — DPR 단독에서 하이브리드로</h3>
+  <p>처음에는 DPR 단독으로 top-5를 바로 검색했는데, 표현이 다르지만 의미가 비슷한 문서는 잘 찾아도 특정 용어·수치가 그대로 포함된 질의에는 정밀도가 떨어지는 경우가 있었습니다. BM25(Sparse)와 DPR(Dense)로 각각 top-10을 검색해 RRF로 결합하고, Cross-Encoder Reranking으로 top-5를 다시 추리는 2단계 구조로 바꿔 recall과 precision을 함께 개선했습니다.</p>
+  <h3>② FAISS의 운영 부담 — ChromaDB로 전환</h3>
+  <p>FAISS는 벡터만 저장하는 라이브러리라 문서 텍스트·메타데이터(표·이미지 토큰 포함)를 별도로 관리하고 FastAPI 서버에 직접 wrapping해야 하는 부담이 있었습니다. ChromaDB로 전환해 벡터·텍스트·메타데이터를 함께 저장하도록 구조를 바꾸자, 쿠버네티스 Pod 단위로 바로 배포할 수 있게 되었고 Grafana 같은 모니터링 툴과의 연동도 쉬워져 운영 부담이 크게 줄었습니다.</p>
+  <h3>③ Kubernetes(Minikube) 배포 실패</h3>
+  <p>Minikube 환경에서 Docker 브리지 네트워크 충돌로 이미지 빌드가 실패하고, <code>ErrImageNeverPull</code>/<code>ImagePullBackOff</code> 오류와 서비스 간 DNS 해석 실패가 반복됐습니다. Minikube 내부 Docker 데몬에서 직접 이미지를 빌드해 배포하도록 바꾸고, 불일치하던 서비스명을 수정(<code>rag</code> → <code>rag-server</code>)했으며, 내부 통신은 ClusterIP, 외부 접근은 NodePort로 분리해 해결했습니다.</p>
+  <h3>④ 반복 질의 응답 속도 — Semantic Cache 도입</h3>
+  <p>같거나 비슷한 질의가 반복될 때마다 매번 검색+재순위화+LLM 추론 전체를 다시 수행하는 건 비효율적이었습니다. <code>LLMCache</code> 클래스를 구현해 질의를 임베딩으로 벡터화한 뒤 ChromaDB 기반 semantic cache에서 유사도를 검색하고, distance가 0.05보다 작은 유사 질의가 있으면 캐시된 응답을 즉시 반환하도록 했습니다. 테스트(TC-002)에서 새로 생성할 때보다 응답 속도가 유의미하게 빨라졌음을 확인했습니다.</p>
+  <h3>⑤ 일정 리스크 — PDF 파싱 예외 케이스로 인한 지연</h3>
+  <p>비정형 문서의 복잡한 표·수식·다단 레이아웃 때문에 PDF 파싱 예외 케이스가 반복적으로 발생해 일정이 지연되자, 모듈별 일정에 버퍼를 두고 기능 단위 병렬 개발이 가능하도록 모듈을 재정비했습니다. 2주 단위 중간 점검 회의를 도입해 리스크를 조기에 파악하는 체계로 전환했습니다.</p>
+
+  <h2>팀 내 기여도</h2>
+  <ul>
+    <li><b>하이브리드 검색 파이프라인 설계·구현</b>: DPR(Dense)·BM25(Sparse) top-10 검색 → RRF 결합 → Cross-Encoder Reranking top-5의 2단계 구조를 설계했습니다. top-k, reranker 모델, 검색 방식은 도메인에 맞게 조절할 수 있게 만들었습니다.</li>
+    <li><b>CRAGD(Electron 앱) 빌드</b>: 사용자의 편의를 위해 PDF를 업로드해 PostgreSQL DB에 저장하는 데스크톱 앱 CRAGD를 Electron 기반으로 직접 빌드했습니다. DB 연결 설정 화면, 업로드 UI, 문서 관리 화면을 구성했습니다.</li>
+    <li><b>DPR 인코더 추가 학습</b>: 도메인 특화 QA 데이터셋으로 DPR 인코더를 추가 학습시켜 검색 정확도를 높였습니다.</li>
+  </ul>
+
+  <h2>개선 결과</h2>
+  <ul>
+    <li>검색 구조를 DPR 단독 top-5에서 하이브리드 top-10 + Reranking top-5로 바꿔, recall과 precision을 함께 개선하는 구조를 완성했습니다.</li>
+    <li>Semantic cache 도입 후 테스트(TC-002)에서 유사 질문에 대해 "새롭게 생성할 때보다 답변 반환 속도가 유의미하게 빨랐다"는 결과를 확인했습니다.</li>
+    <li>성능 요구사항 기준: 질의응답 평균 처리 10초 이내(캐시 히트 시 1초 이내), 동시 사용자 500명 이하에서 웹페이지 표시 10초 이내(초과 시 15초 이내)를 목표로 시스템을 완성했습니다.</li>
+    <li>FAISS → ChromaDB 전환을 완료해 벡터·텍스트·메타데이터를 함께 저장했습니다.</li>
+    <li>Kubernetes 배포 문제(이미지 빌드 실패, DNS 오류)를 모두 해결해 ClusterIP + NodePort 조합의 안정적인 배포 환경을 완성했습니다.</li>
+    <li>2단 레이아웃 PDF 파싱(TC-004)은 구조를 유지한 채 텍스트 추출에 성공했고, 병합 셀 테이블 파싱(TC-005)은 텍스트·이미지 추출은 가능하나 구조적 의미까지는 유지하지 못하는 한계가 남아있음을 테스트로 확인했습니다.</li>
+  </ul>
+
+  <h2>참고 자료</h2>
+  <ul>
+    <li><a href="https://github.com/25capstoneRAG/rag_pipeline.git" class="back">https://github.com/25capstoneRAG/rag_pipeline.git</a></li>
+  </ul>
+
+  <hr>
+  <a class="back" href="../index.html">&larr; 이력서로 돌아가기</a>
+</div>
+</body>
+</html>

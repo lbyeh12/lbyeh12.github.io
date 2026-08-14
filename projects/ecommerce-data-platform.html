@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>전자상거래 데이터 플랫폼 - 이병호</title>
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+<style>
+  :root {
+    --color-bg: #f3f2f2; --color-text: #201f1d; --color-accent: #b68235; --color-accent-700: #7d5411;
+    --color-neutral-700: #605d5d; --color-divider: rgba(32,31,29,0.16);
+    --font-heading: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-body: "Pretendard", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--color-bg); color: var(--color-text); font-family: var(--font-body); font-size: 15px; line-height: 1.75; letter-spacing: -0.01em; display: flex; justify-content: center; padding: 40px 16px; }
+  .page { width: 100%; max-width: 780px; }
+  a.back { font-size: 13px; color: var(--color-accent-700); text-decoration: none; }
+  a.back:hover { text-decoration: underline; }
+  h1 { font-family: var(--font-heading); font-weight: 700; font-size: 30px; margin: 16px 0 4px; letter-spacing: -0.02em; }
+  .meta { font-size: 13px; color: var(--color-neutral-700); margin-bottom: 8px; }
+  .lede { font-size: 15.5px; margin: 20px 0 0; text-align: justify; color: #3a3836; }
+  h2 { font-family: var(--font-heading); font-weight: 700; font-size: 20px; margin: 40px 0 14px; padding-bottom: 8px; border-bottom: 1px solid var(--color-divider); letter-spacing: -0.01em; }
+  h3 { font-family: var(--font-heading); font-weight: 600; font-size: 15.5px; margin: 20px 0 8px; color: #3a3836; }
+  p { text-align: justify; margin: 0 0 12px; }
+  ul { margin: 0 0 12px; padding-left: 20px; }
+  li { margin-bottom: 7px; text-align: justify; }
+  .tag { display: inline-block; font-size: 11px; padding: 3px 10px; border: 1px solid var(--color-accent); color: var(--color-accent); border-radius: 3px; margin: 0 4px 4px 0; }
+  hr { border: none; border-top: 1px solid var(--color-divider); margin: 32px 0 20px; }
+  pre { background: #eae8e7; border: 1px solid var(--color-divider); border-radius: 6px; padding: 14px 16px; font-size: 12.5px; line-height: 1.6; overflow-x: auto; font-family: ui-monospace, "SF Mono", Menlo, monospace; white-space: pre; }
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; margin: 10px 0 18px; }
+  th, td { text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--color-divider); }
+  th { color: var(--color-neutral-700); font-weight: 600; font-size: 12px; letter-spacing: 0.02em; }
+  .card { background: #ece9e8; border: 1px solid var(--color-divider); border-radius: 8px; padding: 16px 18px; margin-bottom: 14px; }
+  .card-label { font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--color-accent-700); margin-bottom: 6px; }
+  .num { font-variant-numeric: tabular-nums; }
+  .qa dt { font-weight: 600; margin-top: 16px; color: var(--color-accent-700); font-size: 14.5px; }
+  .qa dd { margin: 6px 0 0; text-align: justify; }
+  .source-note { font-size: 12px; color: var(--color-neutral-700); margin-top: 4px; }
+  figure.arch-media { margin: 8px 0 18px; }
+  figure.arch-media img { width: 100%; border-radius: 8px; border: 1px solid var(--color-divider); display: block; }
+</style>
+</head>
+<body>
+<div class="page">
+  <a class="back" href="../index.html">&larr; 이력서로 돌아가기</a>
+  <h1>전자상거래 데이터 플랫폼</h1>
+  <div class="meta">개인 프로젝트 · 2026.07 – 2025.08 · <a href="https://github.com/lbyeh12/ProjectE" class="back" style="font-size:13px;">github.com/lbyeh12/ProjectE</a></div>
+
+  <p class="lede">React/FastAPI로 만든 전자상거래 서비스의 사용자 행동 이벤트를 Kafka·Spark로 실시간 처리하고 Airflow 배치로 집계해 AWS 데이터 레이크까지 적재하는 파이프라인을, 1인으로 설계·구현하고 장애 주입·부하 테스트로 직접 검증했습니다.</p>
+  <p class="lede">기반 데이터셋(UCI Online Retail, 약 54만 건)에는 view·search·cart 같은 행동 로그가 없고 완료된 거래 기록만 있었습니다. 이 거래 기록을 기반으로 view→add_to_cart→purchase 퍼널을 합성(비율 10:3:1)하고, 그 이벤트를 실제로 받을 서비스(React+FastAPI)를 직접 구축해 "데이터가 실제로 발생하는 지점부터 소비되는 지점까지"를 다루는 경험을 만들고, 중복 적재 방지·장애 내구성·부하 대응을 스스로 검증하는 것을 목표로 삼았습니다.</p>
+
+  <h2>아키텍처</h2>
+  <figure class="arch-media">
+    <img src="pipeline.gif" alt="전자상거래 데이터 파이프라인 아키텍처 애니메이션">
+  </figure>
+  <h3>데이터 흐름</h3>
+  <pre>[실시간 경로]
+React ──POST /events──▶ FastAPI
+                            │
+              ┌─────────────┼─────────────┐
+              ▼                            ▼
+      outbox_events                     Redis
+    (결제와 같은 트랜잭션)         (멱등성 키 · Rate Limiting)
+              │
+              ▼
+      Outbox Relay (폴링)
+              │
+              ▼
+      Kafka (KRaft, user-events)
+              │
+              ▼
+      Spark Structured Streaming
+              │
+              ▼
+      PostgreSQL ── raw_events / product_stats / traffic_stats
+
+[배치 경로]
+raw_events ─▶ Airflow daily_etl (일 1회) ─▶ daily_metrics (DAU·전환율·매출)
+raw_events ─▶ Airflow dimensional_model_etl ─▶ fact_events + dim_date/product/user (Star Schema, Type2 SCD)
+           ─▶ data_quality_check (Great Expectations, 불량 데이터 격리)
+           ─▶ export_to_s3 ─▶ S3(Parquet, dt 파티션) ─▶ Glue Crawler ─▶ Athena
+
+[관측]
+Prometheus(메트릭) + Grafana(대시보드) + Loki/Promtail(로그) + k6(부하 테스트)</pre>
+  <p>인프라는 Docker Compose로 17개 컨테이너(PostgreSQL, Kafka, Airflow 4개, backend, outbox-relay, Redis, frontend, dashboard, Prometheus, Grafana, Loki, Promtail, exporter 2개 등)를 묶었고, Spark는 Java 의존성 문제로 컨테이너화하지 않고 로컬에서 별도 실행했습니다.</p>
+
+  <h3>왜 이 구조/기술인가 — ADR 기반 선택 이유</h3>
+  <p>프로젝트 저장소에 ADR(Architecture Decision Record) 12건을 남겼고, 각 결정마다 후보를 비교했습니다.</p>
+  <table>
+    <tr><th>항목</th><th>검토한 후보</th><th>최종 선택</th><th>선택 이유</th></tr>
+    <tr><td>모니터링</td><td>Prometheus+Grafana(오픈소스) / CloudWatch류(클라우드 네이티브) / Datadog류(SaaS)</td><td>Prometheus+Grafana</td><td>무료, PostgreSQL/Kafka용 exporter가 성숙해 바로 적용 가능. SaaS는 월 비용·보안 검토 부담, 클라우드 네이티브는 하이브리드 통합이 어려움 (ADR 0001)</td></tr>
+    <tr><td>부하 테스트</td><td>k6 / Locust / JMeter</td><td>k6</td><td>JS로 코드화되어 저장소에서 버전관리 가능, Prometheus remote-write로 Grafana와 자연스럽게 연동. Locust는 처리량이 낮고 Grafana 연동이 약함, JMeter는 GUI <code>.jmx</code>라 코드 리뷰가 어려움 (ADR 0002)</td></tr>
+    <tr><td>로그 수집</td><td>Loki / ELK(Elasticsearch) / OpenSearch / OpenObserve</td><td>Loki</td><td>Prometheus와 동일한 라벨 기반 모델이라 "Grafana 단일 화면" 원칙 유지 가능, 리소스 사용량 낮음. ELK·OpenSearch는 JVM 클러스터라 로컬 규모에 과함 (ADR 0003)</td></tr>
+    <tr><td>이중 쓰기 정합성</td><td>Transactional Outbox / CDC(Debezium) / Saga / 멱등성만으로 대응</td><td>Outbox 패턴</td><td>서비스가 backend 하나뿐이라 Saga가 조율할 대상 자체가 없고, CDC는 별도 인프라 부담이 큼. DB 트랜잭션만으로 원자성을 보장하는 Outbox가 복잡도 대비 가장 직접적으로 맞음 (ADR 0005)</td></tr>
+    <tr><td>멱등성 저장소</td><td>Redis / Valkey / Memcached</td><td>Redis</td><td>시장 점유율이 압도적이고, 이미 같은 라이선스(AGPLv3)의 Grafana·k6·Loki를 쓰고 있어 스택 일관성 확보. Memcached는 원자적 연산(NX)과 자료구조가 Rate Limiting까지 고려하면 부족 (ADR 0006)</td></tr>
+    <tr><td>차원 모델링</td><td>fact_events 단일 사실 테이블(Type2 SCD) / fact_purchases(구매만, Type1)</td><td>fact_events + Type2 SCD</td><td>조회·장바구니·구매 퍼널과 매출을 한 테이블에서 자유롭게 분석 가능하고, 상품 가격 변경 이력을 시점 그대로 재구성 가능 (ADR 0008)</td></tr>
+    <tr><td>데이터 품질 검증</td><td>Great Expectations / Pandas·SQL 직접 검증 / Pydantic 스키마만</td><td>Great Expectations</td><td>검증 규칙을 선언적으로 코드에 남길 수 있고 실패 리포트가 표준화되어 원인 조사가 쉬움. Pydantic은 "형식"만 보고 "가격 음수" 같은 의미적 오류는 못 거름 (ADR 0009)</td></tr>
+    <tr><td>클라우드 데이터 레이크</td><td>AWS(S3+Glue+Athena) / MinIO(자체 호스팅) / GCP·Azure</td><td>AWS</td><td>실제 클라우드 경험, 접근성 (ADR 0011)</td></tr>
+  </table>
+
+  <h2>핵심 이슈 & 트러블슈팅</h2>
+  <h3>① 이중 쓰기 정합성 문제 — DB와 Kafka가 어긋난 순간</h3>
+  <p>재고 5개, VU 50 조건에서 커넥션을 강제로 끊는 장애 주입 테스트를 실행한 결과, DB 기준 구매는 5건인데 Kafka로 전달된 이벤트는 6건으로 불일치가 발생했습니다. 원인은 <code>checkout()</code>이 Kafka 전송을 <code>db.commit()</code> 이전에 수행하는 구조였기 때문입니다. 재고 차감 직후, 커밋 전에 서버가 죽으면 DB 트랜잭션은 롤백되지만 이미 나간 Kafka 메시지는 되돌릴 수 없었습니다. 위 표의 ADR 0005 결정대로 Transactional Outbox 패턴을 도입해 Kafka로 직접 보내는 대신 같은 트랜잭션 안에서 <code>outbox_events</code> 테이블에 기록하고, 별도 Relay 프로세스가 폴링해 전송하도록 구조를 바꿨습니다. 동일한 장애 시나리오로 재검증한 결과 mismatch가 0건으로 완전히 해소됐습니다.</p>
+  <h3>② Airflow DAG 간 의존성 — 센서에서 체인으로</h3>
+  <p>서로 다른 DAG(품질 검증→차원 모델링→S3 적재)을 <code>ExternalTaskSensor</code>로 연결했더니, 수동으로 각 DAG을 다른 시각에 트리거할 때 <code>logical_date</code>가 어긋나 센서가 타임아웃까지 무한 대기하는 문제가 발생했습니다. <code>execution_date_fn</code>으로 자정에 맞추는 방식은 문제를 완화할 뿐 근본적으로 해결하지 못했습니다. <code>TriggerDagRunOperator</code> 체인 방식으로 바꿔, 맨 앞 DAG 하나만 트리거하면 나머지가 자동으로 이어지도록 구조를 단순화했습니다.</p>
+
+  <h2>개선 결과</h2>
+  <table>
+    <tr><th>구간</th><th>이전</th><th>이후</th></tr>
+    <tr><td>API 에러율 (VU 750)</td><td class="num">25~45%</td><td class="num">0.70%</td></tr>
+    <tr><td>처리량 (RPS)</td><td class="num">20~23/s</td><td class="num">201.9/s (약 10배)</td></tr>
+    <tr><td>p95 응답 시간 (VU 750)</td><td class="num">60s (타임아웃)</td><td class="num">2.19s</td></tr>
+    <tr><td>DB-Kafka 이벤트 불일치 (장애 주입)</td><td class="num">1건 mismatch</td><td class="num">0건</td></tr>
+    <tr><td>재고 초과 판매</td><td colspan="2">전 구간 0건 (비관적 락으로 구조적 방지)</td></tr>
+    <tr><td>중복 요청 처리 (멱등성 키, 7회 호출)</td><td colspan="2">실제 처리 1회만 반영</td></tr>
+    <tr><td>CI 테스트</td><td colspan="2">35건 전체 통과, PR마다 GitHub Actions로 자동 검증</td></tr>
+  </table>
+  <p class="source-note">수치 출처: docs/perf/001~013 (부하 테스트·장애 주입 기록), docs/adr/0004~0007 (관련 설계 결정)</p>
+
+  <h2>운영 관점</h2>
+  <ul>
+    <li><b>장애 발생 시 확인 지점</b>: Grafana에서 FastAPI 요청 지표·PostgreSQL 커넥션 수·Kafka consumer lag을 먼저 확인하고, 같은 화면에서 Loki 로그로 넘어가 에러 발생 시점의 실제 로그를 확인합니다. Prometheus/Grafana/Loki를 같은 라벨 체계로 묶어 메트릭에서 로그로 바로 드릴다운되도록 구성했습니다.</li>
+    <li><b>재실행/재시도</b>: Airflow DAG에 <code>retries=3</code>, <code>retry_delay=5분</code>을 설정하고 최종 실패 시 Slack으로 알림을 보냅니다. <code>execution_date</code> 기반으로 동작하도록 바꿔, 특정 과거 날짜의 로직 오류를 그 날짜만 골라 재실행(backfill)할 수 있습니다.</li>
+    <li><b>중복 적재 방지</b>: API 레벨은 Redis 멱등성 키, DB-메시지큐 간은 Outbox 패턴(트랜잭션 원자성)으로 이중으로 막았습니다. 재시도되는 태스크는 UPSERT를 지향해 재실행해도 안전하도록 설계했습니다.</li>
+    <li><b>데이터 품질 검증</b>: Great Expectations로 가격 음수·미래 timestamp·참조 무결성 위반을 배치 변환 전에 검사하고, 실패 건은 <code>quarantine_events</code>에 원본과 실패 사유를 함께 격리합니다. 파이프라인은 실패 건이 있어도 중단되지 않고 나머지 정상 건으로 계속 진행됩니다.</li>
+  </ul>
+
+  <h2>Tech Stack</h2>
+  <div>
+    <span class="tag">React</span>
+    <span class="tag">TypeScript</span>
+    <span class="tag">FastAPI</span>
+    <span class="tag">Kafka</span>
+    <span class="tag">Spark</span>
+    <span class="tag">Airflow</span>
+    <span class="tag">PostgreSQL</span>
+    <span class="tag">Redis</span>
+    <span class="tag">Docker</span>
+    <span class="tag">AWS (S3/Glue/Athena)</span>
+    <span class="tag">Great Expectations</span>
+    <span class="tag">k6</span>
+    <span class="tag">Prometheus/Grafana/Loki</span>
+  </div>
+
+  <hr>
+  <a class="back" href="../index.html">&larr; 이력서로 돌아가기</a>
+</div>
+</body>
+</html>
