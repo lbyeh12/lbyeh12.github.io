@@ -45,7 +45,7 @@
 <div class="page">
   <a class="back" href="../index.html">&larr; 이력서로 돌아가기</a>
   <h1>전자상거래 데이터 플랫폼</h1>
-  <div class="meta">개인 프로젝트 · 2026.07 – 2025.08 · <a href="https://github.com/lbyeh12/ProjectE" class="back" style="font-size:13px;">github.com/lbyeh12/ProjectE</a></div>
+  <div class="meta">개인 프로젝트 · 2026.07 – 2026.08 · <a href="https://github.com/lbyeh12/ProjectE" class="back" style="font-size:13px;">github.com/lbyeh12/ProjectE</a></div>
 
   <p class="lede">React/FastAPI로 만든 전자상거래 서비스의 사용자 행동 이벤트를 Kafka·Spark로 실시간 처리하고 Airflow 배치로 집계해 AWS 데이터 레이크까지 적재하는 파이프라인을, 1인으로 설계·구현하고 장애 주입·부하 테스트로 직접 검증했습니다.</p>
   <p class="lede">기반 데이터셋(UCI Online Retail, 약 54만 건)에는 view·search·cart 같은 행동 로그가 없고 완료된 거래 기록만 있었습니다. 이 거래 기록을 기반으로 view→add_to_cart→purchase 퍼널을 합성(비율 10:3:1)하고, 그 이벤트를 실제로 받을 서비스(React+FastAPI)를 직접 구축해 "데이터가 실제로 발생하는 지점부터 소비되는 지점까지"를 다루는 경험을 만들고, 중복 적재 방지·장애 내구성·부하 대응을 스스로 검증하는 것을 목표로 삼았습니다.</p>
