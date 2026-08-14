@@ -49,12 +49,18 @@
   .r-h2 { font-size: 22px; margin-bottom: var(--space-4); }
   .r-p { text-align: justify; line-height: 1.95; font-size: 15px; }
 
-  .project { margin-bottom: var(--space-6); }
+  .project { position: relative; margin-bottom: var(--space-6); padding: var(--space-3) var(--space-3) var(--space-3) var(--space-4); margin-left: calc(-1 * var(--space-4)); margin-right: calc(-1 * var(--space-3)); border-radius: 6px; border-left: 3px solid transparent; transition: background 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease; }
+  .project:hover { background: var(--color-surface); border-left-color: var(--color-accent); box-shadow: 0 1px 6px rgba(32,31,29,0.08); }
   .project-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: var(--space-3); gap: 12px; }
   .project-title { font-size: 16px; font-weight: 600; }
-  .project-title a { color: var(--color-text); text-decoration: none; }
+  .project-title a { color: var(--color-text); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+  .project-title a::after { content: "›"; color: var(--color-accent); font-weight: 700; font-size: 18px; transition: transform 0.15s ease; }
   .project-title a:hover { color: var(--color-accent-700); text-decoration: underline; }
+  .project-title a:hover::after { transform: translateX(3px); }
+  .project-date-wrap { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; }
   .project-date { font-size: 12px; color: var(--color-neutral-700); white-space: nowrap; }
+  .project-cta { font-size: 11.5px; color: var(--color-neutral-700); opacity: 0; transform: translateX(-4px); transition: opacity 0.15s ease, transform 0.15s ease; white-space: nowrap; }
+  .project:hover .project-cta { opacity: 1; transform: translateX(0); color: var(--color-accent-700); }
   .r-bullet { display: flex; gap: var(--space-2); margin-bottom: var(--space-1); font-size: 14.5px; text-align: justify; line-height: 1.95; }
   .r-bullet::before { content: "—"; color: var(--color-accent-700); flex: none; }
 
@@ -147,7 +153,10 @@
         <div class="project">
           <div class="project-head">
             <div class="project-title"><a href="projects/ecommerce-data-platform.html">전자상거래 데이터 플랫폼</a></div>
-            <div class="project-date">2026.07–2026.08</div>
+            <div class="project-date-wrap">
+              <div class="project-date">2026.07–2026.08</div>
+              <div class="project-cta">자세히 보기 →</div>
+            </div>
           </div>
           <div class="r-bullet">UCI Online Retail 54만 건을 이용한 로그 수집→실시간 처리(Kafka·Spark)→배치 집계(Airflow)→AWS 데이터 레이크까지의 파이프라인을 설계·구현하고, 장애 주입·부하 테스트로 신뢰성을 검증했습니다.</div>
           <div class="r-bullet">의사 결정 과정을 문서화하고 테스트 결과를 문서화하여 추적관리 하였습니다.</div>
@@ -156,7 +165,10 @@
         <div class="project">
           <div class="project-head">
             <div class="project-title"><a href="projects/culture-data-augmentation.html">문화예술 인재 매칭을 위한 데이터 증강 파이프라인</a></div>
-            <div class="project-date">2025.10 · KCC 논문집</div>
+            <div class="project-date-wrap">
+              <div class="project-date">2025.10 · KCC 논문집</div>
+              <div class="project-cta">자세히 보기 →</div>
+            </div>
           </div>
           <div class="r-bullet">실제 데이터가 75명뿐인 희소 도메인에서, LLM 기반 3-Step 파이프라인으로 학습 데이터를 생성하고 ablation 실험으로 유효성을 검증했습니다.</div>
         </div>
@@ -164,7 +176,10 @@
         <div class="project">
           <div class="project-head">
             <div class="project-title"><a href="projects/local-llm-doc-search.html">로컬 LLM 기반 보안 문서 검색 시스템</a></div>
-            <div class="project-date">캡스톤디자인 · 2025.01–2025.12</div>
+            <div class="project-date-wrap">
+              <div class="project-date">캡스톤디자인 · 2025.01–2025.12</div>
+              <div class="project-cta">자세히 보기 →</div>
+            </div>
           </div>
           <div class="r-bullet">PDF 전처리·인덱싱 파이프라인(BM25 + Dense 임베딩)을 구축하고, 로컬 LLM 기반의 완전 오프라인 검색 환경을 설계했습니다.</div>
         </div>
@@ -172,7 +187,10 @@
         <div class="project">
           <div class="project-head">
             <div class="project-title"><a href="projects/data-generation-review.html">데이터 생성 및 검수 프로세스 경험</a></div>
-            <div class="project-date">2024.07–2025.02</div>
+            <div class="project-date-wrap">
+              <div class="project-date">2024.07–2025.02</div>
+              <div class="project-cta">자세히 보기 →</div>
+            </div>
           </div>
           <div class="r-bullet">한국어 QA 데이터 생성·검수 및 이미지 라벨링 판단 기준을 표준화해 데이터 품질 편차를 개선했습니다.</div>
         </div>
