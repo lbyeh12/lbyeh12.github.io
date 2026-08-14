@@ -30,11 +30,12 @@
   a:hover { color: #3a270d; }
 
   header {
-    display: flex; justify-content: space-between; align-items: flex-end;
+    display: flex; justify-content: flex-start; align-items: flex-end; gap: var(--space-4);
     border-bottom: 1px solid var(--color-divider); padding-bottom: var(--space-3); margin-bottom: var(--space-5);
   }
   header h1 { font-size: 40px; }
   header p { font-size: 15px; color: var(--color-accent-700); margin: var(--space-1) 0 0 0; }
+  .header-photo { width: 112px; height: 112px; border-radius: 8px; object-fit: cover; flex: none; }
 
   .layout { display: grid; grid-template-columns: 210px 1fr; gap: var(--space-6); }
   aside { border-right: 1px solid var(--color-divider); padding-right: var(--space-4); }
@@ -67,6 +68,7 @@
 <div class="page">
 
   <header>
+    <img class="header-photo" src="profile.jpg" alt="이병호 프로필 사진">
     <div>
       <h1>이병호</h1>
       <p>Data Engineer &nbsp;|&nbsp; 신입</p>
@@ -136,7 +138,7 @@
     <main>
       <section>
         <h2 class="r-h2">자기소개</h2>
-        <p class="r-p">데이터의 중요성을 경험하고 검증하는 데이터 엔지니어 이병호입니다.<br>데이터 설계·생성부터 수집·학습까지, 데이터를 활용한 전 과정에 대해 공부합니다. 데이터의 발생 지점부터 처리·배치 집계·저장하는 신뢰성 있는 파이프라인을 구축합니다.</p>
+        <p class="r-p">인프라의 신뢰성을 우선으로 생각하는 신입 데이터 엔지니어 이병호입니다.<br>학부연구생 시절 학습 데이터를 생성하고 검증하는 실험을 반복하며 설계 근거와 결과를 문서로 남기는 습관이 생겼고, 이 습관을 인프라를 설계할 때도 그대로 지킵니다. 문제가 생기면 짐작이 아니라 재현과 측정으로 원인을 확인합니다.</p>
       </section>
 
       <section>
@@ -145,7 +147,7 @@
         <div class="project">
           <div class="project-head">
             <div class="project-title"><a href="projects/ecommerce-data-platform.html">전자상거래 데이터 플랫폼</a></div>
-            <div class="project-date">2026.07–2025.08</div>
+            <div class="project-date">2026.07–2026.08</div>
           </div>
           <div class="r-bullet">UCI Online Retail 54만 건을 이용한 로그 수집→실시간 처리(Kafka·Spark)→배치 집계(Airflow)→AWS 데이터 레이크까지의 파이프라인을 설계·구현하고, 장애 주입·부하 테스트로 신뢰성을 검증했습니다.</div>
           <div class="r-bullet">의사 결정 과정을 문서화하고 테스트 결과를 문서화하여 추적관리 하였습니다.</div>
